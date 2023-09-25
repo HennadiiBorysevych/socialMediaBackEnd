@@ -37,6 +37,11 @@ module.exports = {
       });
 
       const post = await newPost.save();
+
+      context.pubsub.publish("new post", {
+        newPost: post,
+      });
+
       return post;
     },
     async deletePost(_, { postID }, context) {
@@ -49,13 +54,17 @@ module.exports = {
           await post.delete();
 
           return "Post deleted";
-          
         } else {
           throw new AuthenticationError("Action not allowed");
         }
       } catch (error) {
         throw new Error(error);
       }
+    },
+  },
+  Subscription: {
+    newPost: {
+      subscribe: (_, args, { pubsub }) => pubsub.asyncIterator(["new post"]),
     },
   },
 };
