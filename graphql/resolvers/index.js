@@ -4,7 +4,8 @@ const commentsRes = require("./comments");
 
 module.exports = {
   Post: {
-    likeCount: (parent) => {},
+    likeCount: (parent) => parent.likes.length,
+    commentsCount: (parent) => parent.comments.length,
   },
   Query: {
     ...postsRes.Query,
